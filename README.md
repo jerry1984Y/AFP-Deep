@@ -38,5 +38,5 @@ ordernon_afp9493:this file contais only no-AFPs names from the non-AFP.fasta for
 # How to Use
 coming soon
 
-References
+# References
 [1] Kandaswamy, Krishna Kumar, et al. "AFP-Pred: A random forest approach for predicting antifreeze proteins from sequence-derived properties." Journal of theoretical biology 270.1 (2011): 56-62.
