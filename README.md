@@ -16,7 +16,7 @@ scikit-learn = 1.2.2
 
 ncbi-blast = 2.2.26
 
-#Description
+# Description
 coming soon
 
 
@@ -35,7 +35,7 @@ orderafp: this file contains only AFPs names from the AFP.fasta for facility usi
 
 ordernon_afp9493:this file contais only no-AFPs names from the non-AFP.fasta for facility using.
 
-How to Use
+# How to Use
 coming soon
 
 References
