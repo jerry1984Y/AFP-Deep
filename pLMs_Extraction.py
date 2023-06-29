@@ -41,7 +41,7 @@ def extraction_pLMs(seqfile):
             seq_len = (attention_mask[seq_num] == 1).sum()
             seq_emd = embedding[seq_num][:seq_len-1]
 
-            with open("midData/PSSM_ORI_20_ProtTran/"+name, 'w') as f:
+            with open("midData/ProtTrans/"+name, 'w') as f:
                 np.savetxt(f, seq_emd, delimiter=',', fmt='%s')
             #print(seq_emd.shape)
 
