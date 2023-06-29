@@ -35,7 +35,7 @@ non-afp.seq: this file contains 9493 no-AFPs with key-value format and the data 
 
 orderafp: this file contains only AFPs names from the AFP.fasta for facility using
 
-ordernon_afp9493:this file contais only no-AFPs names from the non-AFP.fasta for facility using.
+ordernon_afp9493:this file contains only no-AFPs names from the non-AFP.fasta for facility using.
 
 # How to Use
 1. Extract PSSM feature: cd to the AFP-TLDeep dictionary,and run "python3 AFP_PSSM_blastpgp_calc.py",the PSSM matrixs will be extracted to midData/PSSM fold, and then run "pythons3 AFP_PSSM_ORI_20_calc.py" to extract the pssm features in midData/PSSM_ORI_20.
