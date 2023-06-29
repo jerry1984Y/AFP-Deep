@@ -19,8 +19,8 @@ def threadprocesspssm(threadindex,dir_pssm,seq):
     os.remove(os.path.join(dir_pssm,'tmp'+str(threadindex)+'.fasta'))
 
 def pssm_progress(seq):
-    dir_pssm="/home/dell/Documents/wujiashun/afp-tldeep/midData/PSSM"
-    os.chdir('/home/dell/Documents/wujiashun/afp-tldeep/ncbi-blast-2.2.26/bin')
+    dir_pssm="/home/dell/Documents/wujiashun/AFP-TLDeep/midData/PSSM"
+    os.chdir('/home/dell/Documents/wujiashun/AFP-TLDeep/ncbi-blast-2.2.26/bin')
     keycount=len(seq)
     mthread_list = []
     threadcount = 30
