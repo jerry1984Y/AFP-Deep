@@ -2,9 +2,11 @@ import torch
 import torch.nn as nn
 import random
 from sklearn import metrics
-
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
+
+from utility import save_prob_label
+
 
 class TLDeepModel(nn.Module):
     def __init__(self):
@@ -52,8 +54,8 @@ class TLDeepModel(nn.Module):
         pssm = self.cnn3(pssm)
         ddl = ddl - 2
         pssm = self.relu(pssm)
-        ddl = torch.floor((ddl - 3) / 3) + 1
-        pssm = self.pool3(pssm)
+        #ddl = torch.floor((ddl - 3) / 3) + 1
+        #pssm = self.pool3(pssm)
 
         pssm = pssm.permute(0, 2, 1)
 
@@ -97,16 +99,18 @@ def create_list_train_test():
 
 
     f = open('Dataset/orderafp')
+    #f = open('Dataset/orderafp920')
     positive_all = f.readlines()
     f.close()
     random.shuffle(positive_all)
 
     f = open('Dataset/ordernon_afp9493')
+    #f = open('Dataset/ordernon_afp3948')
     negative_all = f.readlines()
     f.close()
     random.shuffle(negative_all)
-    lst_path_positive_train =positive_all[0:300]
-    lst_path_negative_train =negative_all[0:300]
+    lst_path_positive_train =positive_all[0:300] #300，644
+    lst_path_negative_train =negative_all[0:300]#300，644 2763
 
     print("Positive train: ", len(lst_path_positive_train))
     print("Negative train: ", len(lst_path_negative_train))
@@ -117,8 +121,8 @@ def create_list_train_test():
     lst_path_train = lst_path_positive_train + lst_path_negative_train
     lst_label_train = lst_positive_train_label + lst_negative_train_label
 
-    test_positive=positive_all[300:]
-    test_negative=negative_all[300:]
+    test_positive=positive_all[300:] #300，644
+    test_negative=negative_all[300:]#300，644 2763
 
     test_positive_label= [1] * len(test_positive)
     test_negative_label = [0] * len(test_negative)
@@ -192,7 +196,7 @@ def train():
 def test():
     Y_train = [item.strip() for item in test_path_all]
     test_set = BioinformaticsDataset(Y_train, test_label_all)
-    test_loader = DataLoader(dataset=test_set, batch_size=16,shuffle=True,
+    test_loader = DataLoader(dataset=test_set, batch_size=32,shuffle=True,
                               num_workers=32, pin_memory=True, persistent_workers=True,collate_fn=coll_paddding)
     model = TLDeepModel()
     model=model.to(device)
@@ -236,7 +240,8 @@ def test():
     print('youden ', youden)
     print('auc', auc)
     print('<----------------')
-
+    save_prob_label(arr_probs, arr_labels, 'TL-Deep2.csv')
+    print('<----------------save to csv finish')
 
 
 if __name__ == "__main__":
