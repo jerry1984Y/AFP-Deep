@@ -69,7 +69,7 @@ ordernon_afp3948:this file contains only no-AFPs names from the non-AFP.fasta fo
 
 1. Cd to the AFP-TLDeep dictionary,and run "python3 AFP-TLDeep.py"
 
-4. The comparison work in our paper refers "ProtT5-BiLSTM.py", "ProtT5-MLP.py", "PSSM_CNN_BiLSTM_Liner.py","PSSM_CNN_Self_Attention_Liner.py","PSSM_ResNet_BiLSTM_Liner.py","PSSM_ResNet_SelfAttention_Liner.py","Seq_One_HOT.py","Seq_Word_Embedding.py"
+4. The comparison work in our paper refers "ProtT5-BiLSTM.py", "ProtT5-MLP.py", "PSSM_CNN_BiLSTM_Liner.py", "PSSM_CNN_Self_Attention_Liner.py", "PSSM_ResNet_BiLSTM_Liner.py", "PSSM_ResNet_SelfAttention_Liner.py", "Seq_One_HOT.py", "Seq_Word_Embedding.py"
 
 # References
 [1] Kandaswamy, Krishna Kumar, et al. "AFP-Pred: A random forest approach for predicting antifreeze proteins from sequence-derived properties." Journal of theoretical biology 270.1 (2011): 56-62.
