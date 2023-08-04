@@ -22,7 +22,7 @@ ProtTrans (ProtT5-XL-UniRef50 model)
 The proposed AFP-Deep method is implemented using Python on torch. The model learns sequence global contextual features  using pre-trained language models (pLMs) using transfer learning and the hybrid deep neural network designed for evolutionary context extraction enhances the correlation between evolutionary embedding and antifreeze pattern.
 
 
-# 4 DatasetS
+# 4 Datasets
 ## 4.1 Dateset481
 The dataset is obtained from Kandaswamy et. al [1], containing 481 antifreeze proteins and 9493 non-antifreeze proteins. The Files in Dateset dictionary are:
 
@@ -65,7 +65,7 @@ ordernon_afp3948:this file contains only no-AFPs names from the non-AFP.fasta fo
 
 2. Extract pLMs embedding: cd to the AFP-TLDeep dictionary, and run "python3 pLMs_Extraction.py", the pLMs embedding matrixs will be extracted to midData/ProtTrans fold.
 
-## 5.3 Train and test
+## 5.3 Training and testing
 
 1. Cd to the AFP-TLDeep dictionary,and run "python3 AFP-TLDeep.py"
 
