@@ -140,7 +140,7 @@ class BioinformaticsDataset(Dataset):
     def __getitem__(self, index):
         label = self.Y[index]
 
-        df = pd.read_csv('midData/PSSM_ORI_20_ProtTran/' + self.X[index], header=None)
+        df = pd.read_csv('midData/ProtTrans/' + self.X[index], header=None)
         dat = df.values.astype(float).tolist()
         dat = torch.tensor(dat)
 
