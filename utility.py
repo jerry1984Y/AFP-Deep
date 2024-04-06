@@ -52,20 +52,56 @@ def read_prob_label(filename):
     labels= df[df.columns[2]].values.astype(np.float32)
     return probs , labels
 
-def create_list_train_test_balance():
+def create_list_train_test481():
+    df = pd.read_csv('Dataset/AFP481.seq', header=None)
+    positive_all = df[df.columns[0]].values.tolist()
+
+    df = pd.read_csv('Dataset/Non-AFP9493.seq', header=None)
+    negative_all = df[df.columns[0]].values.tolist()
+
+
+    random.shuffle(positive_all)
+    random.shuffle(negative_all)
+
+    lst_path_positive_train =positive_all[0:300]
+    lst_path_negative_train =negative_all[0:300]
+
+    print("Positive train: ", len(lst_path_positive_train))
+    print("Negative train: ", len(lst_path_negative_train))
+
+    lst_positive_train_label = [1] * len(lst_path_positive_train)
+    lst_negative_train_label = [0] * len(lst_path_negative_train)
+
+    lst_path_train = lst_path_positive_train + lst_path_negative_train
+    lst_label_train = lst_positive_train_label + lst_negative_train_label
+
+    random.seed(1)
+    random.shuffle(lst_path_train)
+    random.seed(1)
+    random.shuffle(lst_label_train)
+
+    test_positive=positive_all[300:]
+    test_negative=negative_all[300:]
+
+    test_positive_label= [1] * len(test_positive)
+    test_negative_label = [0] * len(test_negative)
+
+    test_path_data=test_positive+test_negative
+    test_label=test_positive_label+test_negative_label
+    #save_data
+    return lst_path_train, lst_label_train,test_path_data,test_label
+
+def create_list_train_test920_balance():
 
 
     #f = open('Dataset/orderafp')
-    f = open('Dataset/orderafp920')
-    positive_all = f.readlines()
-    f.close()
-    random.shuffle(positive_all)
 
-    #f = open('Dataset/ordernon_afp9493')
-    f = open('Dataset/ordernon_afp3948')
-    negative_all = f.readlines()
-    f.close()
-    random.shuffle(negative_all)
+    df = pd.read_csv('Dataset/AFP920.seq', header=None)
+    positive_all = df[df.columns[0]].values.tolist()
+
+    df = pd.read_csv('Dataset/Non-AFP3948.seq', header=None)
+    negative_all = df[df.columns[0]].values.tolist()
+
     lst_path_positive_train =positive_all[0:644] #300，644
     lst_path_negative_train =negative_all[0:644]#300，644 2763
 
@@ -78,6 +114,11 @@ def create_list_train_test_balance():
     lst_path_train = lst_path_positive_train + lst_path_negative_train
     lst_label_train = lst_positive_train_label + lst_negative_train_label
 
+    random.seed(1)
+    random.shuffle(lst_path_train)
+    random.seed(1)
+    random.shuffle(lst_label_train)
+
     test_positive=positive_all[644:] #300，644
     test_negative=negative_all[644:]#300，644 2763
 
@@ -89,22 +130,15 @@ def create_list_train_test_balance():
 
     return lst_path_train, lst_label_train,test_path_data,test_label
 
-def create_list_train_test_imbalance():
+def create_list_train_test920_imbalance():
+    df = pd.read_csv('Dataset/AFP920.seq', header=None)
+    positive_all = df[df.columns[0]].values.tolist()
 
+    df = pd.read_csv('Dataset/Non-AFP3948.seq', header=None)
+    negative_all = df[df.columns[0]].values.tolist()
 
-    #f = open('Dataset/orderafp')
-    f = open('Dataset/orderafp920')
-    positive_all = f.readlines()
-    f.close()
-    random.shuffle(positive_all)
-
-    #f = open('Dataset/ordernon_afp9493')
-    f = open('Dataset/ordernon_afp3948')
-    negative_all = f.readlines()
-    f.close()
-    random.shuffle(negative_all)
     lst_path_positive_train =positive_all[0:644] #300，644
-    lst_path_negative_train =negative_all[0:2764]#300，644 2763
+    lst_path_negative_train =negative_all[0:2763]#300，644 2763
 
     print("Positive train: ", len(lst_path_positive_train))
     print("Negative train: ", len(lst_path_negative_train))
@@ -114,6 +148,11 @@ def create_list_train_test_imbalance():
 
     lst_path_train = lst_path_positive_train + lst_path_negative_train
     lst_label_train = lst_positive_train_label + lst_negative_train_label
+
+    random.seed(1)
+    random.shuffle(lst_path_train)
+    random.seed(1)
+    random.shuffle(lst_label_train)
 
     test_positive=positive_all[644:] #300，644
     test_negative=negative_all[2763:]#300，644 2763
