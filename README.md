@@ -26,32 +26,22 @@ The proposed AFP-Deep method is implemented using Python on torch. The model lea
 ## 4.1 Dateset481
 The dataset is obtained from Kandaswamy et. al [1], containing 481 antifreeze proteins and 9493 non-antifreeze proteins. The Files in Dateset dictionary are:
 
-AFP.fasta:this file contains 481 AFPs with fasta format
 
-non-AFP.fasta: this file contains 9493 no-AFPs with fasta format
 
-afp.seq: this file contains 481 AFPs with key-value format and the data from AFP.fasta
+AFP481.seq: this file contains 481 AFPs with key-value format
 
-non-afp.seq: this file contains 9493 no-AFPs with key-value format and the data from non-AFP.fasta
+Non-AFP9493.seq: this file contains 9493 no-AFPs with key-value format
 
-orderafp: this file contains only AFPs names from the AFP.fasta for facility using
 
-ordernon_afp9493:this file contains only no-AFPs names from the non-AFP.fasta for facility using.
 
 ## 4.2 Dateset920
-The dateset is constructed in our work, containing 920 antifreeze proteins and 3948 non-antifreeze proteins.The Files in Dateset dictionary are:
+The dateset is constructed in our work, containing 920 antifreeze proteins and 3955 non-antifreeze proteins.The Files in Dateset dictionary are:
 
-AFP920.fasta:this file contains 920 AFPs with fasta format
 
-non-AFP3948.fasta: this file contains 3948 no-AFPs with fasta format
+AFP920.seq: this file contains 920 AFPs with key-value format
 
-afp920.seq: this file contains 920 AFPs with key-value format and the data from AFP.fasta
+Non-AFP3955.seq: this file contains 3948 no-AFPs with key-value format
 
-non-afp3948.seq: this file contains 3948 no-AFPs with key-value format and the data from non-AFP.fasta
-
-orderafp920: this file contains only AFPs names from the AFP.fasta for facility using
-
-ordernon_afp3948:this file contains only no-AFPs names from the non-AFP.fasta for facility using.
 
 # 5. How to Use
 
@@ -61,7 +51,7 @@ ordernon_afp3948:this file contains only no-AFPs names from the non-AFP.fasta fo
 
 ## 5.2 Extract features
 
-1. Extract PSSM feature: cd to the AFP-TLDeep dictionary,and run "python3 AFP_PSSM_blastpgp_calc.py",the PSSM matrixs will be extracted to midData/PSSM fold, and then run "pythons3 AFP_PSSM_ORI_20_calc.py" to extract the pssm features in midData/PSSM_ORI_20.
+1. Extract PSSM feature: cd to the AFP-Deep dictionary,and run "python3 AFP_PSSM_blastpgp_calc.py",the PSSM matrixs will be extracted to midData/PSSM fold, and then run "pythons3 AFP_PSSM_ORI_20_calc.py" to extract the pssm features in midData/PSSM_ORI_20.
 
 2. Extract pLMs embedding: cd to the AFP-TLDeep dictionary, and run "python3 pLMs_Extraction.py", the pLMs embedding matrixs will be extracted to midData/ProtTrans fold.
 
