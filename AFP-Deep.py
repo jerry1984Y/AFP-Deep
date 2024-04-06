@@ -1,3 +1,5 @@
+import datetime
+
 import torch
 import torch.nn as nn
 import random
@@ -5,7 +7,8 @@ from sklearn import metrics
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 
-from utility import save_prob_label
+from utility import save_prob_label, create_list_train_test481, create_list_train_test920_balance, \
+    create_list_train_test920_imbalance
 
 
 class TLDeepModel(nn.Module):
@@ -36,17 +39,16 @@ class TLDeepModel(nn.Module):
         self.fc3 = nn.Linear(64, 2)
 
     def forward(self,prot,pssm,data_length):
+        pssm = pssm.permute(0, 2, 1)
 
-        pssm=pssm.permute(0,2,1)
-
-        pssm=self.cnn1(pssm)
-        pssm=self.relu(pssm)
-        ddl=data_length-2
-        pssm=self.pool1(pssm)
-        ddl=torch.floor((ddl-3)/3)+1
+        pssm = self.cnn1(pssm)
+        pssm = self.relu(pssm)
+        ddl = data_length - 2
+        pssm = self.pool1(pssm)
+        ddl = torch.floor((ddl - 3) / 3) + 1
 
         pssm = self.cnn2(pssm)
-        ddl=ddl-2
+        ddl = ddl - 2
         pssm = self.relu(pssm)
         ddl = torch.floor((ddl - 3) / 3) + 1
         pssm = self.pool2(pssm)
@@ -54,16 +56,15 @@ class TLDeepModel(nn.Module):
         pssm = self.cnn3(pssm)
         ddl = ddl - 2
         pssm = self.relu(pssm)
-        #ddl = torch.floor((ddl - 3) / 3) + 1
-        #pssm = self.pool3(pssm)
+        # ddl = torch.floor((ddl - 3) / 3) + 1
+        # pssm = self.pool3(pssm)
 
         pssm = pssm.permute(0, 2, 1)
-
 
         pssm = torch.nn.utils.rnn.pack_padded_sequence(pssm, ddl.to('cpu'), batch_first=True)
         pssm, (h_n, h_c) = self.lstm(pssm)
 
-        output = torch.cat((h_n[-1],h_n[-2]),dim=1)
+        output = torch.cat((h_n[-1], h_n[-2]), dim=1)
 
         tsum = torch.sum(prot, dim=1, keepdim=False)  # batchsize,L
         leg = torch.unsqueeze(data_length, dim=1)
@@ -95,42 +96,7 @@ def coll_paddding(batch_traindata):
     feature1 = torch.nn.utils.rnn.pad_sequence(feature1, batch_first=True, padding_value=0)
     return feature0,feature1,torch.tensor(train_y, dtype=torch.long),torch.tensor(data_length)
 
-def create_list_train_test():
 
-
-    f = open('Dataset/orderafp')
-    #f = open('Dataset/orderafp920')
-    positive_all = f.readlines()
-    f.close()
-    random.shuffle(positive_all)
-
-    f = open('Dataset/ordernon_afp9493')
-    #f = open('Dataset/ordernon_afp3948')
-    negative_all = f.readlines()
-    f.close()
-    random.shuffle(negative_all)
-    lst_path_positive_train =positive_all[0:300] #300，644
-    lst_path_negative_train =negative_all[0:300]#300，644 2763
-
-    print("Positive train: ", len(lst_path_positive_train))
-    print("Negative train: ", len(lst_path_negative_train))
-
-    lst_positive_train_label = [1] * len(lst_path_positive_train)
-    lst_negative_train_label = [0] * len(lst_path_negative_train)
-
-    lst_path_train = lst_path_positive_train + lst_path_negative_train
-    lst_label_train = lst_positive_train_label + lst_negative_train_label
-
-    test_positive=positive_all[300:] #300，644
-    test_negative=negative_all[300:]#300，644 2763
-
-    test_positive_label= [1] * len(test_positive)
-    test_negative_label = [0] * len(test_negative)
-
-    test_path_data=test_positive+test_negative
-    test_label=test_positive_label+test_negative_label
-
-    return lst_path_train, lst_label_train,test_path_data,test_label
 class BioinformaticsDataset(Dataset):
     # X: list cac file (full path)
     # Y: list label [0, 1]; 0: negative, 1: positive
@@ -139,8 +105,8 @@ class BioinformaticsDataset(Dataset):
         self.Y = Y
     def __getitem__(self, index):
         label = self.Y[index]
-
-        df = pd.read_csv('midData/ProtTrans/' + self.X[index], header=None)
+        #df = pd.read_csv('midData/ESM2/' + self.X[index] + '.data', header=None)
+        df = pd.read_csv('midData/ProtTran/' + self.X[index], header=None)
         dat = df.values.astype(float).tolist()
         dat = torch.tensor(dat)
 
@@ -162,12 +128,12 @@ def train():
     model = TLDeepModel()
 
     model=model.to(device)
-    train_loader = DataLoader(dataset=train_set, batch_size=16,
+    train_loader = DataLoader(dataset=train_set, batch_size=32,
                                    shuffle=True,num_workers=32, pin_memory=True, persistent_workers=True ,collate_fn=coll_paddding)
     best_val_loss=300
     loss_func =nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
-    epochs = 20
+    epochs = 30
     model.train()
     for i in range(epochs):
 
@@ -221,27 +187,33 @@ def test():
     print('-------------->')
 
     auc = metrics.roc_auc_score(arr_labels, arr_probs)
+    precision_1, recall_1, threshold_1 = metrics.precision_recall_curve(arr_labels, arr_probs)
+    aupr_1 = metrics.auc(recall_1, precision_1)
     print('acc ', metrics.accuracy_score(arr_labels, arr_labels_hyps))
-    print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
+    # print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
     tn, fp, fn, tp = metrics.confusion_matrix(arr_labels, arr_labels_hyps).ravel()
     print('tn, fp, fn, tp ', tn, fp, fn, tp)
     print('MCC ', metrics.matthews_corrcoef(arr_labels, arr_labels_hyps))
     sensitivity = tp / (tp + fn)
     specificity = tn / (tn + fp)
-    f1score = 2 * tp / (2 * tp + fp + fn)
-    recall = tp / (tp + fn)
+    # f1score = 2 * tp / (2 * tp + fp + fn)
+    # recall = tp / (tp + fn)
     precision = tp / (tp + fp)
-    youden = sensitivity + specificity - 1
+    # youden = sensitivity + specificity - 1
     print('sensitivity ', sensitivity)
     print('specificity ', specificity)
     print('precision ', precision)
-    print('recall ', recall)
-    print('f1score ', f1score)
-    print('youden ', youden)
+    # print('recall ', recall)
+    # print('f1score ', f1score)
+    # print('youden ', youden)
     print('auc', auc)
-    print('<----------------')
-    save_prob_label(arr_probs, arr_labels, 'TL-Deep2.csv')
-    print('<----------------save to csv finish')
+    print('AUPR ', aupr_1)
+    print('<----------------save to csv')
+
+    b = str(datetime.datetime.now())
+    b = b.replace(':', '_')
+    save_prob_label(arr_probs, arr_labels, 'Result/T5-AFP_Deep_480' + b + '.csv')
+    print('T5-AFP_Deep_480' + b + '.csv', '<---------save to csv finish')
 
 
 if __name__ == "__main__":
@@ -251,7 +223,7 @@ if __name__ == "__main__":
     print("use cuda: {}".format(cuda))
     device = torch.device("cuda" if cuda else "cpu")
     # multiprocessing.set_start_method('spawn')
-    lst_path_train_all, lst_label_train_all,test_path_all,test_label_all = create_list_train_test()
+    lst_path_train_all, lst_label_train_all,test_path_all,test_label_all = create_list_train_test481()
     train()
     test()
     print('completed')
