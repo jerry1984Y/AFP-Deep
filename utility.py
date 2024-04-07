@@ -93,13 +93,10 @@ def create_list_train_test481():
 
 def create_list_train_test920_balance():
 
-
-    #f = open('Dataset/orderafp')
-
     df = pd.read_csv('Dataset/AFP920.seq', header=None)
     positive_all = df[df.columns[0]].values.tolist()
 
-    df = pd.read_csv('Dataset/Non-AFP3948.seq', header=None)
+    df = pd.read_csv('Dataset/Non-AFP3955.seq', header=None)
     negative_all = df[df.columns[0]].values.tolist()
 
     lst_path_positive_train =positive_all[0:644] #300，644
@@ -134,7 +131,7 @@ def create_list_train_test920_imbalance():
     df = pd.read_csv('Dataset/AFP920.seq', header=None)
     positive_all = df[df.columns[0]].values.tolist()
 
-    df = pd.read_csv('Dataset/Non-AFP3948.seq', header=None)
+    df = pd.read_csv('Dataset/Non-AFP3955.seq', header=None)
     negative_all = df[df.columns[0]].values.tolist()
 
     lst_path_positive_train =positive_all[0:644] #300，644
