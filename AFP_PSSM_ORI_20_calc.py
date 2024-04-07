@@ -33,8 +33,8 @@ def pssm_normal_progress(seqlabel):
 
 
 if __name__ == '__main__':
-    afplist=pd.read_csv('Dataset/AFP920.seq', header=None)
-    nonafplist = pd.read_csv('Dataset/Non-AFP3948.seq', header=None)
+    afplist=pd.read_csv('Dataset/AFP920.seq', header=None)  #Dataset/AFP481.seq
+    nonafplist = pd.read_csv('Dataset/Non-AFP3955.seq', header=None) #Dataset/Non-AFP9493.seq
     print(len(afplist))
     print(len(nonafplist))
     print('process afplist')
