@@ -19,13 +19,12 @@ ncbi-blast = 2.2.26
 ProtTrans (ProtT5-XL-UniRef50 model)
 
 # 3. Description
-The proposed AFP-Deep method is implemented using Python on torch. The model learns sequence global contextual features  using pre-trained language models (pLMs) using transfer learning and the hybrid deep neural network designed for evolutionary context extraction enhances the correlation between evolutionary embedding and antifreeze pattern.
+Accurate identification of antifreeze proteins (AFPs) is crucial in developing biomimetic synthetic anti-icing materials and low-temperature organ preservation materials. Although numerous machine-learning methods have been proposed for AFPs prediction, the complex and diverse nature of AFPs limits the prediction performance of existing methods. In this study, we propose AFP-Deep, a new deep learning method to predict antifreeze proteins by integrating deep embedding from protein sequences with pre-trained protein language models and evolutionary contexts with hybrid feature extraction networks. The experimental results demonstrated that the main advantage of AFP-Deep is its utilization of pre-trained protein language models, which can extract discriminative global contextual features from protein sequences. Additionally, the hybrid deep neural networks designed for protein language models and evolutionary context feature extraction enhances the correlation between embeddings and antifreeze pattern. The performance evaluation results show that AFP-Deep achieves superior performance compared to state-of-the-art models on benchmark datasets, achieving an AUPRC of 0.724 and 0.924, respectively.
 
 
 # 4 Datasets
 ## 4.1 Dateset481
 The dataset is obtained from Kandaswamy et. al [1], containing 481 antifreeze proteins and 9493 non-antifreeze proteins. The Files in Dateset dictionary are:
-
 
 
 AFP481.seq: this file contains 481 AFPs with key-value format
