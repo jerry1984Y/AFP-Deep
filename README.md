@@ -26,12 +26,9 @@ Accurate identification of antifreeze proteins (AFPs) is crucial in developing b
 ## 4.1 Dateset481
 The dataset is obtained from Kandaswamy et. al [1], containing 481 antifreeze proteins and 9493 non-antifreeze proteins. The Files in Dateset dictionary are:
 
-
 AFP481.seq: this file contains 481 AFPs with key-value format
 
-Non-AFP9493.seq: this file contains 9493 no-AFPs with key-value format
-
-
+Non-AFP9493.seq: this file contains 9493 Non-AFPs with key-value format
 
 ## 4.2 Dateset920
 The dateset is constructed in our work, containing 920 antifreeze proteins and 3955 non-antifreeze proteins.The Files in Dateset dictionary are:
@@ -39,7 +36,7 @@ The dateset is constructed in our work, containing 920 antifreeze proteins and 3
 
 AFP920.seq: this file contains 920 AFPs with key-value format
 
-Non-AFP3955.seq: this file contains 3948 no-AFPs with key-value format
+Non-AFP3955.seq: this file contains 3955 Non-AFPs with key-value format
 
 
 # 5. How to Use
@@ -50,13 +47,13 @@ Non-AFP3955.seq: this file contains 3948 no-AFPs with key-value format
 
 ## 5.2 Extract features
 
-1. Extract PSSM feature: cd to the AFP-Deep dictionary,and run "python3 AFP_PSSM_blastpgp_calc.py",the PSSM matrixs will be extracted to midData/PSSM fold, and then run "pythons3 AFP_PSSM_ORI_20_calc.py" to extract the pssm features in midData/PSSM_ORI_20.
+1. Extract PSSM feature: cd to the AFP-Deep dictionary,and run "python3 AFP_Pssm_calc.py",the PSSM matrixs will be extracted to midData/PSSM fold, and then run "pythons3 AFP_PSSM_ORI_20_calc.py" to extract the pssm features in midData/PSSM_ORI_20. Prior to running AFP_Pssm_calc.py, please modify the "dir_pssm" and "ncbi-blast-2.2.26/bin" paths in the code.
 
-2. Extract pLMs embedding: cd to the AFP-TLDeep dictionary, and run "python3 pLMs_Extraction.py", the pLMs embedding matrixs will be extracted to midData/ProtTrans fold.
+2. Extract pLMs embedding: cd to the AFP-Deep dictionary, and run "python3 pLMs_Extraction.py", the pLMs embedding matrixs will be extracted to midData/ProtTran fold.
 
 ## 5.3 Training and testing
 
-1. Cd to the AFP-TLDeep dictionary,and run "python3 AFP-TLDeep.py"
+1. Cd to the AFP-Deep dictionary,and run "python3 AFP-Deep.py"
 
 4. The comparison work in our paper refers "ProtT5-BiLSTM.py", "ProtT5-MLP.py", "PSSM_CNN_BiLSTM_Liner.py", "PSSM_CNN_Self_Attention_Liner.py", "PSSM_ResNet_BiLSTM_Liner.py", "PSSM_ResNet_SelfAttention_Liner.py", "Seq_One_HOT.py", "Seq_Word_Embedding.py"
 
