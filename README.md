@@ -23,14 +23,14 @@ Accurate identification of antifreeze proteins (AFPs) is crucial in developing b
 
 
 # 4 Datasets
-## 4.1 Dateset481
+## 4.1 Dataset481
 The dataset is obtained from Kandaswamy et. al [1], containing 481 antifreeze proteins and 9493 non-antifreeze proteins. The Files in Dateset dictionary are:
 
 AFP481.seq: this file contains 481 AFPs with key-value format
 
 Non-AFP9493.seq: this file contains 9493 Non-AFPs with key-value format
 
-## 4.2 Dateset920
+## 4.2 Dataset920
 The dateset is constructed in our work, containing 920 antifreeze proteins and 3955 non-antifreeze proteins.The Files in Dateset dictionary are:
 
 
