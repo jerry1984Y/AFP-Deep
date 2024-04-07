@@ -21,6 +21,7 @@ def threadprocesspssm(threadindex,dir_pssm,seq):
 def pssm_progress(seq):
     #chagnge the fold path to your's,
     dir_pssm="/home/dell/Documents/wujiashun/AFP-Deep/midData/PSSM"
+    #chagnge the fold path to your's,
     os.chdir('/home/dell/Documents/wujiashun/AFP-Deep/ncbi-blast-2.2.26/bin')
     keycount=len(seq)
     mthread_list = []
@@ -45,8 +46,8 @@ def pssm_progress(seq):
     print('PSSM finished')
 
 if __name__ == '__main__':
-    afplist=loadData('Dataset/AFP920.seq')
-    nonafplist = loadData('Dataset/Non-AFP3948.seq')
+    afplist=loadData('Dataset/AFP920.seq') #Dataset/AFP481.seq
+    nonafplist = loadData('Dataset/Non-AFP3955.seq') #Dataset/Non-AFP9493.seq
     print(len(afplist))
     print(len(nonafplist))
     print('process afplist')
