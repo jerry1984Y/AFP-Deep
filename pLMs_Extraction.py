@@ -41,7 +41,7 @@ def extraction_pLMs(seqfile):
             seq_len = (attention_mask[seq_num] == 1).sum()
             seq_emd = embedding[seq_num][:seq_len-1]
 
-            with open("midData/ProtTrans/"+name, 'w') as f:
+            with open("midData/ProtTran/"+name, 'w') as f:
                 np.savetxt(f, seq_emd, delimiter=',', fmt='%s')
             #print(seq_emd.shape)
 
@@ -52,7 +52,7 @@ def extraction_pLMs(seqfile):
 
 
 if __name__ == '__main__':
-    extraction_pLMs('Dataset/afp.seq')
-    extraction_pLMs('Dataset/non-afp.seq')
+    extraction_pLMs('Dataset/AFP481.seq')
+    extraction_pLMs('Dataset/Non-AFP9493.seq')
     extraction_pLMs('Dataset/AFP920.seq')
-    extraction_pLMs('Dataset/Non-AFP3948.seq')
+    extraction_pLMs('Dataset/Non-AFP3955.seq')
