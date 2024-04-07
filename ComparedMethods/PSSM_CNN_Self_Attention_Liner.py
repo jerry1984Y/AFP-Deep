@@ -1,3 +1,4 @@
+import datetime
 
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
@@ -10,51 +11,8 @@ from sklearn import metrics
 
 import torch.functional as F
 
-from utility import save_prob_label
+from utility import save_prob_label, create_list_train_test481, create_list_train_test920_balance
 
-
-def create_list_train_test():
-    # 'Dataset/orderafp'
-    # 'Dataset/ordernon_afp'
-
-    f = open('Dataset/orderafp')
-    positive_all = f.readlines()
-    f.close()
-    random.shuffle(positive_all)
-
-    f = open('Dataset/ordernon_afp9493')
-    negative_all = f.readlines()
-    f.close()
-    random.shuffle(negative_all)
-    lst_path_positive_train =positive_all[0:300]
-    lst_path_negative_train =negative_all[0:300]
-
-    print("Positive train: ", len(lst_path_positive_train))
-    print("Negative train: ", len(lst_path_negative_train))
-
-    lst_positive_train_label = [1] * len(lst_path_positive_train)
-    lst_negative_train_label = [0] * len(lst_path_negative_train)
-
-    lst_path_train = lst_path_positive_train + lst_path_negative_train
-    lst_label_train = lst_positive_train_label + lst_negative_train_label
-    random.seed(1)
-    random.shuffle(lst_path_train)
-    random.seed(1)
-    random.shuffle(lst_label_train)
-    test_positive=positive_all[300:]
-    test_negative=negative_all[300:]
-
-    test_positive_label= [1] * len(test_positive)
-    test_negative_label = [0] * len(test_negative)
-
-    test_path_data=test_positive+test_negative
-    test_label=test_positive_label+test_negative_label
-
-    random.seed(1)
-    random.shuffle(test_path_data)
-    random.seed(1)
-    random.shuffle(test_label)
-    return lst_path_train, lst_label_train,test_path_data,test_label
 
 def softmax(X,length,actuallength):
     s =torch.exp(X)  #batchsize,L,D
@@ -108,7 +66,7 @@ class BioinformaticsDataset(Dataset):
     def __getitem__(self, index):
         label = self.Y[index]
 
-        df2= pd.read_csv('midData/PSSM_ORI_20/' + self.X[index], header=None)
+        df2= pd.read_csv('../midData/PSSM_ORI_20/' + self.X[index], header=None)
         dat2 = df2.values.astype(float).tolist()
 
         return torch.tensor(dat2),label
@@ -275,36 +233,42 @@ def test():
 
     print('-------------->')
 
-    auc =metrics.roc_auc_score(arr_labels, arr_probs)
+    auc = metrics.roc_auc_score(arr_labels, arr_probs)
+    precision_1, recall_1, threshold_1 = metrics.precision_recall_curve(arr_labels, arr_probs)
+    aupr_1 = metrics.auc(recall_1, precision_1)
     print('acc ', metrics.accuracy_score(arr_labels, arr_labels_hyps))
-    print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
+    # print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
     tn, fp, fn, tp = metrics.confusion_matrix(arr_labels, arr_labels_hyps).ravel()
-    print('tn, fp, fn, tp ',tn, fp, fn, tp )
+    print('tn, fp, fn, tp ', tn, fp, fn, tp)
     print('MCC ', metrics.matthews_corrcoef(arr_labels, arr_labels_hyps))
     sensitivity = tp / (tp + fn)
     specificity = tn / (tn + fp)
-    f1score = 2 * tp / (2 * tp + fp + fn)
-    recall = tp / (tp + fn)
+    # f1score = 2 * tp / (2 * tp + fp + fn)
+    # recall = tp / (tp + fn)
     precision = tp / (tp + fp)
-    youden = sensitivity + specificity - 1
+    # youden = sensitivity + specificity - 1
     print('sensitivity ', sensitivity)
     print('specificity ', specificity)
     print('precision ', precision)
-    print('recall ', recall)
-    print('f1score ', f1score)
-    print('youden ', youden)
+    # print('recall ', recall)
+    # print('f1score ', f1score)
+    # print('youden ', youden)
     print('auc', auc)
-    print('<----------------')
+    print('AUPR ', aupr_1)
+    print('<----------------save to csv')
 
-    save_prob_label(arr_probs, arr_labels, 'PSSM-CNN-Self-Attention.csv')
-    print('<----------------save to csv finish')
+    b = str(datetime.datetime.now())
+    b = b.replace(':', '_')
+
+    save_prob_label(arr_probs, arr_labels, '../Result/PSSM-CNN-SA_920.csv')
+    print('PSSM-CNN-SA_920_' + b + '.csv', '<---------save to csv finish')
 if __name__ == "__main__":
     cuda = torch.cuda.is_available()
 
     torch.cuda.set_device(0)
     print("use cuda: {}".format(cuda))
     device = torch.device("cuda" if cuda else "cpu")
-    lst_path_train_all, lst_label_train_all, test_path_all, test_label_all = create_list_train_test()
+    lst_path_train_all, lst_label_train_all, test_path_all, test_label_all = create_list_train_test920_balance()
     train()
     test()
     print('completed')
