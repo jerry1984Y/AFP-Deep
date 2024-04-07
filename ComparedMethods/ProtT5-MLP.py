@@ -12,7 +12,7 @@ import torch.nn.functional as F
 import glob
 import numpy as np
 
-from utility import save_prob_label
+from utility import save_prob_label, create_list_train_test481, create_list_train_test920_balance
 
 
 class LstmModel(nn.Module):
@@ -53,39 +53,6 @@ def coll_paddding(batch_traindata):
     feature0 = torch.nn.utils.rnn.pad_sequence(feature0, batch_first=True, padding_value=0)
     return feature0,torch.tensor(train_y, dtype=torch.long),torch.tensor(data_length)
 
-def create_list_train_test():
-
-    f = open('Dataset/orderafp')
-    positive_all = f.readlines()
-    f.close()
-    random.shuffle(positive_all)
-
-    f = open('Dataset/ordernon_afp9493')
-    negative_all = f.readlines()
-    f.close()
-    random.shuffle(negative_all)
-    lst_path_positive_train =positive_all[0:300]
-    lst_path_negative_train =negative_all[0:300]
-
-    print("Positive train: ", len(lst_path_positive_train))
-    print("Negative train: ", len(lst_path_negative_train))
-
-    lst_positive_train_label = [1] * len(lst_path_positive_train)
-    lst_negative_train_label = [0] * len(lst_path_negative_train)
-
-    lst_path_train = lst_path_positive_train + lst_path_negative_train
-    lst_label_train = lst_positive_train_label + lst_negative_train_label
-
-    test_positive=positive_all[300:]
-    test_negative=negative_all[300:]
-
-    test_positive_label= [1] * len(test_positive)
-    test_negative_label = [0] * len(test_negative)
-
-    test_path_data=test_positive+test_negative
-    test_label=test_positive_label+test_negative_label
-    #save_data
-    return lst_path_train, lst_label_train,test_path_data,test_label
 class BioinformaticsDataset(Dataset):
     # X: list cac file (full path)
     # Y: list label [0, 1]; 0: negative, 1: positive
@@ -94,8 +61,8 @@ class BioinformaticsDataset(Dataset):
         self.Y = Y
     def __getitem__(self, index):
         label = self.Y[index]
-
-        df = pd.read_csv('midData/ProtTrans/' + self.X[index], header=None)
+        #df = pd.read_csv('../midData/ESM2/' + self.X[index]+'data', header=None)
+        df = pd.read_csv('../midData/ProtTran/' + self.X[index], header=None)
         dat = df.values.astype(float).tolist()
 
         return torch.tensor(dat),label
@@ -117,7 +84,7 @@ def train():
     best_val_loss=300
     loss_func =nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
-    epochs = 20
+    epochs = 30
     model.train()
     for i in range(epochs):
 
@@ -172,27 +139,34 @@ def test():
     print('-------------->')
 
     auc = metrics.roc_auc_score(arr_labels, arr_probs)
+    precision_1, recall_1, threshold_1 = metrics.precision_recall_curve(arr_labels, arr_probs)
+    aupr_1 = metrics.auc(recall_1, precision_1)
     print('acc ', metrics.accuracy_score(arr_labels, arr_labels_hyps))
-    print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
+    #print('balanced_accuracy ', metrics.balanced_accuracy_score(arr_labels, arr_labels_hyps))
     tn, fp, fn, tp = metrics.confusion_matrix(arr_labels, arr_labels_hyps).ravel()
     print('tn, fp, fn, tp ', tn, fp, fn, tp)
     print('MCC ', metrics.matthews_corrcoef(arr_labels, arr_labels_hyps))
     sensitivity = tp / (tp + fn)
     specificity = tn / (tn + fp)
-    f1score = 2 * tp / (2 * tp + fp + fn)
-    recall = tp / (tp + fn)
+    #f1score = 2 * tp / (2 * tp + fp + fn)
+    #recall = tp / (tp + fn)
     precision = tp / (tp + fp)
-    youden = sensitivity + specificity - 1
+    #youden = sensitivity + specificity - 1
     print('sensitivity ', sensitivity)
     print('specificity ', specificity)
     print('precision ', precision)
-    print('recall ', recall)
-    print('f1score ', f1score)
-    print('youden ', youden)
+    #print('recall ', recall)
+    #print('f1score ', f1score)
+    #print('youden ', youden)
     print('auc', auc)
+    print('AUPR ', aupr_1)
     print('<----------------save to csv')
-    save_prob_label(arr_probs,arr_labels,'ProtT5-MLP.csv')
-    print('<----------------save to csv finish')
+
+    b = str(datetime.datetime.now())
+    b = b.replace(':', '_')
+
+    save_prob_label(arr_probs,arr_labels,'../Result/ProtT5-MLP_481_'+b+'.csv')
+    print('ProtT5-MLP_481' + b + '.csv', '<---------save to csv finish')
 
 
 
@@ -203,17 +177,17 @@ if __name__ == "__main__":
     print("use cuda: {}".format(cuda))
     device = torch.device("cuda" if cuda else "cpu")
 
-    lst_path_train_all, lst_label_train_all,test_path_all,test_label_all = create_list_train_test()
+    lst_path_train_all, lst_label_train_all,test_path_all,test_label_all = create_list_train_test481()
     time1 = datetime.datetime.now()
     print('train start time')
     print(time1)
     train()
-    print('train start time')
+    print('train end time')
     time2 = datetime.datetime.now()
     print(time2)
-    print((time2 - time1).seconds)
+    print('train times,',(time2 - time1).seconds)
     time1 = datetime.datetime.now()
     test()
     time2 = datetime.datetime.now()
-    print((time2 - time1).seconds)
+    print('test times,',(time2 - time1).seconds)
     print('completed')
