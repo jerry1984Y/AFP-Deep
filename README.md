@@ -1,5 +1,5 @@
 # AFP-Deep
-Improving Antifreeze Proteins Prediction with Protein Language Models and Hybrid Feature Extraction Network
+Improving Antifreeze Proteins Prediction with Protein Language Models and Hybrid Feature Extraction Networks
 
 # 1. Citation
 coming soon
